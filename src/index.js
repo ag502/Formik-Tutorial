@@ -1,8 +1,48 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form, ErrorMessage, useField } from "formik";
 import * as Yup from 'yup'
 import "./styles.css";
+
+const MyTextInput = ({label, ...props}) => {
+    const [field, meta] = useField(props)
+    return (
+        <>
+            <label htmlFor={props.id || props.name}>{label}</label>
+            <input {...field} {...props}/>
+            {meta.touched && meta.error ? (
+                <div>{meta.error}</div>
+            ): null}
+        </>
+    )
+}
+
+const MyCheckbox = ({children, ...props}) => {
+    const [field, meta] = useField(props)
+    return (
+        <div>
+            <label>
+                <input type="checkbox" {...field} {...props}/>
+                {children}
+            </label>
+            {meta.touched && meta.error ? (
+                <div>{meta.error}</div>
+            ) : null}
+        </div>
+    )
+}
+
+const MySelect = ({label, children, ...props}) => {
+    const [field, meta] = useField(props)
+    return (
+        <div>
+            <label htmlFor={props.id || props.name}>{label}</label>
+            <select {...field} {...props}>
+                {children}
+            </select>
+        </div>
+    )
+}
 
 const SignupForm = () => {
     return (
@@ -16,8 +56,16 @@ const SignupForm = () => {
                   .max(20, 'Must be 20 character or less')
                   .required("Required"),
               email: Yup.string().email("Invalid email address")
+                  .required("Required"),
+              acceptedTerms: Yup.boolean()
                   .required("Required")
-
+                  .oneOf([true], "You must accept the terms and conditions."),
+              jobType: Yup.string()
+                  .oneOf(
+                      ["designer", "development", "product", "other"],
+                      "invalid Job Type"
+                  )
+                  .required("Required")
             })}
             onSubmit={(values, {setSubmitting}) => {
                 setTimeout(() => {
@@ -27,52 +75,38 @@ const SignupForm = () => {
             }}
         >
             <Form>
-                <label htmlFor="firstName">First Name</label>
-                <Field name="firstName" type="text"/>
-                <ErrorMessage name="firstName"/>
+                <MyTextInput
+                    label="First Name"
+                    name="firstName"
+                    type="text"
+                />
 
-                <label htmlFor="lastName">last Name</label>
-                <Field name="lastName" type="text"/>
-                <ErrorMessage name="lastName"/>
+                <MyTextInput
+                    label="Last Name"
+                    name="lastName"
+                    type="text"
+                />
 
-                <label htmlFor="email">Email Address</label>
-                <Field name="email" type="email"/>
-                <ErrorMessage name="email"/>
+                <MyTextInput
+                    label="Email Address"
+                    name="email"
+                    type="email"
+                />
+
+                <MyCheckbox name="acceptedTerms">
+                    I accepted the terms and conditions
+                </MyCheckbox>
+
+                <MySelect label="Job Type" name="jobType">
+                    <option value="">Select a job type</option>
+                    <option value="designer">Designer</option>
+                    <option value="development">Developer</option>
+                    <option value="product">Product Manager</option>
+                    <option value="other">Other</option>
+                </MySelect>
 
                 <button type="submit">Submit</button>
             </Form>
-            {/*{formik => (*/}
-            {/*    <form onSubmit={formik.handleSubmit}>*/}
-            {/*        <label htmlFor="firstName">First Name</label>*/}
-            {/*        <input*/}
-            {/*            id="firstName"*/}
-            {/*            type="text"*/}
-            {/*            {...formik.getFieldProps("firstName")}*/}
-            {/*        />*/}
-            {/*        {formik.touched.firstName && formik.errors.firstName ? (*/}
-            {/*            <div>{formik.errors.firstName}</div>*/}
-            {/*        ) : null}*/}
-            {/*        <label htmlFor="lastName">Last Name</label>*/}
-            {/*        <input*/}
-            {/*            id="lastName"*/}
-            {/*            type="text"*/}
-            {/*            {...formik.getFieldProps("lastName")}*/}
-            {/*        />*/}
-            {/*        {formik.touched.lastName && formik.errors.lastName ? (*/}
-            {/*            <div>{formik.errors.lastName}</div>*/}
-            {/*        ) : null}*/}
-            {/*        <label htmlFor="email">Email Address</label>*/}
-            {/*        <input*/}
-            {/*            id="email"*/}
-            {/*            type="email"*/}
-            {/*            {...formik.getFieldProps("email")}*/}
-            {/*        />*/}
-            {/*        {formik.touched.email && formik.errors.email ? (*/}
-            {/*            <div>{formik.errors.email}</div>*/}
-            {/*        ): null}*/}
-            {/*        <button type="submit">Submit</button>*/}
-            {/*    </form>*/}
-            {/*)}*/}
         </Formik>
     )
 };
