@@ -56,9 +56,10 @@ const SignupForm = () => {
                 id="firstName"
                 name="firstName"
                 type="text"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.firstName}
+                {...formik.getFieldProps("firstName")}
+                // onChange={formik.handleChange}
+                // onBlur={formik.handleBlur}
+                // value={formik.values.firstName}
             />
             {formik.touched.firstName && formik.errors.firstName ?
                 <div>{formik.errors.firstName}</div> : null}
@@ -68,9 +69,10 @@ const SignupForm = () => {
                 id="lastName"
                 name="lastName"
                 type="text"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.lastName}
+                {...formik.getFieldProps("lastName")}
+                // onChange={formik.handleChange}
+                // onBlur={formik.handleBlur}
+                // value={formik.values.lastName}
             />
             {formik.touched.lastName && formik.errors.lastName ?
                 <div>{formik.errors.lastName}</div> : null}
@@ -80,9 +82,10 @@ const SignupForm = () => {
                 id="email"
                 name="email"
                 type="email"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.email}
+                {...formik.getFieldProps("email")}
+                // onChange={formik.handleChange}
+                // onBlur={formik.handleBlur}
+                // value={formik.values.email}
             />
             {formik.touched.email && formik.errors.email ?
                 <div>{formik.errors.email}</div> : null}
